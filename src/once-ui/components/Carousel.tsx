@@ -1,7 +1,7 @@
 "use client";
 
 import { Flex, RevealFx, Scroller, SmartImage } from ".";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Dispatch, SetStateAction } from "react";
 
 interface Image {
   src: string;
@@ -14,6 +14,9 @@ interface CarouselProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;
   sizes?: string;
   revealedByDefault?: boolean;
+  // Added props to make the Carousel a controlled component
+  activeImageIndex?: number; // Optional: If provided, the parent controls the active index
+  onIndexChange?: Dispatch<SetStateAction<number>>; // Optional: Callback to notify parent of index changes
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -22,9 +25,17 @@ const Carousel: React.FC<CarouselProps> = ({
   aspectRatio = "16 / 9",
   sizes,
   revealedByDefault = false,
+  activeImageIndex: propActiveImageIndex, // Destructure with a different name
+  onIndexChange, // Destructure the callback
   ...rest
 }) => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  // Use internal state if propActiveImageIndex is not provided (uncontrolled mode)
+  // Otherwise, use propActiveImageIndex as the source of truth (controlled mode)
+  const [internalActiveIndex, setInternalActiveIndex] = useState<number>(propActiveImageIndex ?? 0);
+
+  // Determine the effective active index: controlled by prop if available, otherwise internal state
+  const effectiveActiveIndex = propActiveImageIndex !== undefined ? propActiveImageIndex : internalActiveIndex;
+
   const [isTransitioning, setIsTransitioning] = useState(revealedByDefault);
   const [initialTransition, setInitialTransition] = useState(revealedByDefault);
   const nextImageRef = useRef<HTMLImageElement | null>(null);
@@ -37,21 +48,31 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   };
 
+  const updateActiveIndex = (newIndex: number) => {
+    if (onIndexChange) {
+      // If onIndexChange is provided, let the parent control the state
+      onIndexChange(newIndex);
+    } else {
+      // Otherwise, update internal state (uncontrolled mode)
+      setInternalActiveIndex(newIndex);
+    }
+  };
+
   const handleImageClick = () => {
     if (images.length > 1) {
-      const nextIndex = (activeIndex + 1) % images.length;
+      const nextIndex = (effectiveActiveIndex + 1) % images.length;
       handleControlClick(nextIndex);
     }
   };
 
   const handleControlClick = (nextIndex: number) => {
-    if (nextIndex !== activeIndex && !transitionTimeoutRef.current) {
+    if (nextIndex !== effectiveActiveIndex && !transitionTimeoutRef.current) {
       preloadNextImage(nextIndex);
 
       setIsTransitioning(false);
 
       transitionTimeoutRef.current = setTimeout(() => {
-        setActiveIndex(nextIndex);
+        updateActiveIndex(nextIndex); // Use the unified update function
 
         setTimeout(() => {
           setIsTransitioning(true);
@@ -73,6 +94,16 @@ const Carousel: React.FC<CarouselProps> = ({
     };
   }, [revealedByDefault, initialTransition]);
 
+  // If the propActiveImageIndex changes, update the internal state
+  // This is important if the Carousel is used in a mixed controlled/uncontrolled way,
+  // or if the parent initially passes a different index.
+  useEffect(() => {
+    if (propActiveImageIndex !== undefined && propActiveImageIndex !== internalActiveIndex) {
+      setInternalActiveIndex(propActiveImageIndex);
+    }
+  }, [propActiveImageIndex, internalActiveIndex]);
+
+
   if (images.length === 0) {
     return null;
   }
@@ -92,9 +123,9 @@ const Carousel: React.FC<CarouselProps> = ({
           priority
           radius="l"
           border="neutral-alpha-weak"
-          alt={images[activeIndex]?.alt}
+          alt={images[effectiveActiveIndex]?.alt} // Use effectiveActiveIndex
           aspectRatio={aspectRatio}
-          src={images[activeIndex]?.src}
+          src={images[effectiveActiveIndex]?.src} // Use effectiveActiveIndex
           style={{
             ...(images.length > 1 && {
               cursor: "pointer",
@@ -112,7 +143,7 @@ const Carousel: React.FC<CarouselProps> = ({
                   onClick={() => handleControlClick(index)}
                   style={{
                     background:
-                      activeIndex === index
+                      effectiveActiveIndex === index // Use effectiveActiveIndex
                         ? "var(--neutral-on-background-strong)"
                         : "var(--neutral-alpha-medium)",
                     transition: "background 0.3s ease",
@@ -130,7 +161,7 @@ const Carousel: React.FC<CarouselProps> = ({
                 <Flex
                   key={index}
                   style={{
-                    border: activeIndex === index ? "2px solid var(--brand-solid-strong)" : "none",
+                    border: effectiveActiveIndex === index ? "2px solid var(--brand-solid-strong)" : "none", // Use effectiveActiveIndex
                     borderRadius: "var(--radius-m-nest-4)",
                     transition: "border 0.3s ease",
                   }}

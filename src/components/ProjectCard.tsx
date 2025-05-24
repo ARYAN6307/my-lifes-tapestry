@@ -1,6 +1,6 @@
 "use client"; // This is a Client Component
 
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import {
   Carousel,
   Column,
@@ -10,14 +10,16 @@ import {
 } from "@/once-ui/components";
 
 
+interface ProjectImage {
+  src: string;
+  title: string;
+  description: string;
+  content: string;
+}
+
 interface ProjectCardProps {
   href: string;
-  images: {
-    src: string;
-    title: string;
-    description: string;
-    content: string;
-  }[];
+  images: ProjectImage[];
   avatars: { src: string }[];
   link: string;
 }
@@ -31,25 +33,31 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const handleImageChange = (index: number) => {
-    setActiveImageIndex(index);
-  };
-
   const activeImage = images[activeImageIndex];
+
+  if (!activeImage) {
+    return (
+      <Column fillWidth gap="l" padding="l" className="bg-white dark:bg-neutral-900 rounded-2xl shadow-md transition-all">
+        <Text>No image data available.</Text>
+      </Column>
+    );
+  }
 
   return (
     <Column fillWidth gap="l" padding="l" className="bg-white dark:bg-neutral-900 rounded-2xl shadow-md transition-all">
+      {/* Carousel component to display images */}
       <Carousel
         sizes="(max-width: 960px) 100vw, 960px"
         images={images.map((image, index) => ({
           src: image.src,
           alt: image.title,
           key: index,
-          onClick: () => handleImageChange(index),
         }))}
-        // PASSED PROPS TO CONTROL CAROUSEL
+        activeImageIndex={activeImageIndex} // Pass the controlled index
+        onIndexChange={setActiveImageIndex as Dispatch<SetStateAction<number>>} // Pass the setter function
       />
 
+      {/* Dynamically display title, description, and content based on activeImage */}
       <Flex
         mobileDirection="column"
         fillWidth
