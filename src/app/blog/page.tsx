@@ -1,9 +1,10 @@
 "use client";
 
-import { Column, Heading, Flex, Text, Grid } from "@/once-ui/components"; // Added Grid
-import { ProjectCard } from "@/components"; // Assuming ProjectCard is in "@/components"
+import { Column, Heading, Flex, Text, Grid } from "@/once-ui/components";
+import { ProjectCard } from "@/components";
+import { useState } from "react";
 
-// --- SEPARATED DATA ARRAYS ---
+// --- SEPARATED DATA ARRAYS (unchanged from previous response) ---
 
 const movieExperiencesData = [
   {
@@ -11,133 +12,133 @@ const movieExperiencesData = [
     href: "experiences/movies",
     images: [
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Sultan (2016)",
         description: "First cinema experience with school friends during a school trip.",
         content: "Watched at Lucknow Public College as part of an NSO program. I bought a very costly 70 rupees pastry and enjoyed it without sharing due to extreme hunger.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Avengers: Infinity War (2018)",
         description: "Watched with family at Fun Mall, Lucknow.",
         content: "Had already watched a cam-recorded version but suggested it to family. They didn't quite understand what was going on.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Avengers: Endgame (2019)",
         description: "Best movie experience with school friends at Fun Mall, with many goosebumps moments.",
         content: "Enjoyed along with the audience and friends. Considered the best movie experience at that time.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Godzilla vs. Kong (2021)",
         description: "Watched with school friends at Wave Mall.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Venom: Let There Be Carnage (2021)",
         description: "Watched with school friends in Lucknow.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Shang-Chi and the Legend of the Ten Rings (2021)",
         description: "Enjoyed with friends.",
         content: "No specific location or anecdote provided beyond enjoyment.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Eternals (2021)",
         description: "Watched at Wave Mall.",
         content: "No specific 'watched with' or anecdote provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Resident Evil: Welcome to Raccoon City (2021)",
         description: "Watched the movie.",
         content: "No specific 'watched with', location, or anecdote provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Spider-Man: No Way Home (2021)",
         description: "Another best movie experience with school friends at Cinepolis One Awadh Centre, with many goosebumps moments.",
         content: "Considered another best movie experience.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Bhool Bhulaiyaa (2022)",
         description: "Watched with friends in Lucknow.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Doctor Strange in the Multiverse of Madness (2022)",
         description: "Watched with College friends at a mall in Shahdra.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Black Adam (2022)",
         description: "Watched with school friends at Phoenix Palasio.",
         content: "Traveled via metro and had chole kulche.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Brahmāstra: Part One – Shiva (2022)",
         description: "Watched with College friends at Gaur City Mall.",
         content: "Opinion: 'Bakwas movie' (worthless/bad movie).",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Insidious: The Red Door (2023)",
         description: "Watched with friends late night on a night out.",
         content: "After the movie, we had a party with drinks and Zomato order.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Mission: Impossible – Dead Reckoning Part One (2023)",
         description: "Watched with friends at Lulu Mall, Lucknow.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Jawan (2023)",
         description: "Watched with College friends at Gaur City Mall.",
         content: "Opinion: 'Badiya thi' (it was good).",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Deadpool & Wolverine (2024)",
         description: "Watched with college friends at VVIP Mall, Ghaziabad.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Venom: The Last Dance (2024)",
         description: "Watched with college friends at VVIP Mall, Ghaziabad.",
         content: "No specific anecdote or opinion provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Final Destination 6 (2025)",
         description: "Watched at Phoenix Palasio Mall.",
         content: "No specific 'watched with' or anecdote provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Mission: Impossible – Dead Reckoning Part Two (2025)",
         description: "Watched at Wave Mall.",
         content: "No specific 'watched with' or anecdote provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Shinchan: Dinosaur Diary (2025)",
         description: "Watched at Lulu Mall.",
         content: "No specific 'watched with' or anecdote provided.",
       },
       {
-        src: "/images/experiences/movies/generic-movie.png", // Placeholder image
+        src: "/images/experiences/movies/generic-movie.png",
         title: "Thunderbolts (2025)",
         description: "Watched with friends at Fun Mall, Lucknow.",
         content: "No specific anecdote provided.",
@@ -161,9 +162,9 @@ const foodExperiencesData = [
       },
       {
         src: "/images/experiences/restaurants/family-dining-generic.png", // Generic placeholder
-        title: "Delicious Point Restaurant, Sahara States",
+        title: "Curry Leaf, Prayagraj",
         description: "Exploring local flavors with family.",
-        content: "A casual dining spot offering tasty food for family outings in Sahara States.",
+        content: "A casual dining spot offering tasty food for family outings in Prayagraj.",
       },
       {
         src: "/images/experiences/restaurants/family-dining-generic.png", // Generic placeholder
@@ -234,13 +235,13 @@ const foodExperiencesData = [
         content: "A reliable choice for fast food cravings and casual meetups.",
       },
       {
-        src: "/images/experiences/restaurants/friends-casual-generic.png", // Generic placeholder
+        src: "/images/experiences/restaurants/friends-casual-generic.png", // Placeholder image
         title: "School Canteen",
         description: "Daily Treats at the School Canteen",
         content: "The hub of daily school life, where quick snacks and lunch breaks were shared with classmates and friends.",
       },
       {
-        src: "/images/experiences/restaurants/friends-casual-generic.png", // Generic placeholder
+        src: "/images/experiences/restaurants/friends-casual-generic.png", // Placeholder image
         title: "Deepu Bhai Canteen",
         description: "Local Favorites at Deepu Bhai Canteen",
         content: "A memorable local spot for specific dishes and friendly gatherings with school friends.",
@@ -345,49 +346,49 @@ const funExperiencesData = [
     href: "experiences/fun",
     images: [
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder for new fun activities
+        src: "/images/experiences/fun/activity-generic.png",
         title: "VR Car Driving",
         description: "Immersive virtual reality car driving simulations (Lulu Mall Lucknow, Funtura).",
         content: "Experiencing the thrill of driving in a virtual world, a fun and exciting escape at Funtura, Lulu Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Shooting Games",
         description: "Engaging in competitive shooting activities (Lulu Mall Lucknow, Funtura).",
         content: "Participating in shooting games, testing aim and precision for an adrenaline rush at Funtura, Lulu Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Bumper Car Rides",
         description: "Thrilling and fun car colliding experiences (Lulu Mall Lucknow, Funtura).",
         content: "Enjoying the excitement of bumper cars, a classic fun activity for laughs and playful collisions at Funtura, Lulu Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Zero Gravity Experiences",
         description: "Simulating weightlessness in a fun setting (Lulu Mall Lucknow, Funtura).",
         content: "Feeling the sensation of zero gravity, a unique and memorable experience at Funtura, Lulu Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Roller Coaster Thrills",
         description: "Riding exhilarating roller coasters for an adrenaline rush (Lulu Mall Lucknow, Funtura).",
         content: "The excitement of twists, turns, and drops on a roller coaster, a classic fun adventure at Funtura, Lulu Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Biking Adventures with Sister",
         description: "Enjoying bike rides with your sister (Lulu Mall Lucknow, Funtura).",
         content: "Sharing fun and memorable moments while biking together at Funtura, Lulu Mall, exploring places on two wheels.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "VR Horror Ride (Fun Mall Lucknow)",
         description: "An intense virtual reality horror ride experience.",
         content: "Diving into a terrifying virtual world, a thrilling and chilling experience at Fun Mall.",
       },
       {
-        src: "/images/experiences/fun/activity-generic.png", // Generic placeholder
+        src: "/images/experiences/fun/activity-generic.png",
         title: "Real-Life PUBG Shooting Game (Fun Mall Lucknow)",
         description: "Immersive real-life shooting game experience, like PUBG.",
         content: "Engaging in a tactical real-life shooting game, simulating the excitement of PUBG with friends at Fun Mall.",
@@ -401,32 +402,46 @@ const funExperiencesData = [
 // --- MAIN REACT COMPONENT ---
 
 export default function LifeExperiences() {
+  const [activeFoodCategorySlug, setActiveFoodCategorySlug] = useState('family-restaurant-experiences');
+
   const formatSlugForDisplay = (slug: string) => {
     return slug
-      .replace(/-/g, ' ') // Replace hyphens with spaces
-      .split(' ') // Split into words
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
-      .join(' ') // Join back into a string
-      .replace('Exp', 'Experiences') // Correct common abbreviation
-      .replace('Blr', 'Bengaluru'); // Correct 'BLR' to 'Bengaluru'
+      .replace(/-/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+      .replace('Exp', 'Experiences')
+      .replace('Blr', 'Bengaluru');
   };
+
+  const getFoodFilterButtonText = (slug: string) => {
+    switch (slug) {
+      case 'family-restaurant-experiences': return 'Family';
+      case 'school-friends-restaurant-experiences': return 'School Friends';
+      case 'college-food-experiences': return 'College';
+      case 'intern-blr-food-experiences': return 'Internship BLR';
+      default: return formatSlugForDisplay(slug);
+    }
+  };
+
+  const selectedFoodCategory = foodExperiencesData.find(
+    (category) => category.slug === activeFoodCategorySlug
+  );
 
   return (
     <Column
       fillWidth
       gap="xl"
       marginBottom="40"
-      paddingX="l"
-      // Adjust maxWidth here if you want the content to be wider overall.
-      // Example: maxWidth="l"
+      paddingX="l" // This padding defines the overall content width for the main layout
     >
       {/* Hero Section for the page */}
       <Column
         fillWidth
         horizontal="center"
-        paddingY="xl" // Increased vertical padding for a more spacious look
+        paddingY="xl"
         className="bg-gradient-to-br from-blue-500 to-purple-600 dark:from-neutral-800 dark:to-neutral-950 text-white rounded-xl shadow-lg"
-        style={{ borderRadius: '2rem' }} // More pronounced rounded corners
+        style={{ borderRadius: '2rem' }}
       >
         <Heading as="h1" wrap="balance" variant="display-strong-xl" className="text-center">
           Journey Through My Life&apos;s Tapestry
@@ -437,14 +452,14 @@ export default function LifeExperiences() {
       </Column>
 
       {/* Main Content Sections */}
-      <Column fillWidth flex={1} gap="xl"> {/* Increased gap between main sections */}
+      <Column fillWidth flex={1} gap="xl">
 
-        {/* Movies Experiences Section */}
+        {/* Movies Experiences Section (unchanged) */}
         <Column fillWidth gap="xl">
           <Heading as="h2" variant="heading-strong-xl" className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500 dark:from-cyan-400 dark:to-fuchsia-500">
             {formatSlugForDisplay(movieExperiencesData[0].slug)}
           </Heading>
-          <Grid columns="1" mobileColumns="1" gap="l"> {/* Grid for section content */}
+          <Grid columns="1" mobileColumns="1" gap="l">
             <ProjectCard
               href={movieExperiencesData[0].href}
               images={movieExperiencesData[0].images}
@@ -455,40 +470,70 @@ export default function LifeExperiences() {
         </Column>
 
         {/* Food Experiences Section */}
-        <Column fillWidth gap="xl">
+        <Column fillWidth gap="s">
           <Heading as="h2" variant="heading-strong-xl" className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 dark:from-lime-400 dark:to-teal-500">
             Food Experiences
           </Heading>
-          {/* Suggestion for UI Arrangement in Food Experiences:
-              Since food experiences are categorized (Family, School, College, Intern),
-              we can create subsections for each category.
-              Each subsection will have its own sub-heading and display its items.
-              The ProjectCard component is assumed to be capable of rendering a grid of items
-              from its 'images' prop. This allows each food sub-category to have its own
-              visually distinct group of cards.
-          */}
-          {foodExperiencesData.map((foodCategory) => (
-            <Column key={foodCategory.slug} fillWidth gap="l">
-              <Heading as="h3" variant="heading-strong-m" className="text-neutral-700 dark:text-neutral-200 mt-8">
-                {formatSlugForDisplay(foodCategory.slug)}
+
+          {/* Horizontal Filter Bar for Food Experiences with Custom Button Style */}
+          <Flex
+            horizontal="center"
+            gap="0" // Gap between buttons
+            // Removed padding="l" prop (as it was commented out in your snippet)
+            // Removed `p-4 sm:p-6` Tailwind classes for horizontal padding from the `className`
+            className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-700
+                       overflow-x-auto whitespace-nowrap scroll-smooth
+                       // Hide scrollbar for aesthetics (cross-browser)
+                       [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {foodExperiencesData.map((category) => {
+              const buttonText = getFoodFilterButtonText(category.slug);
+              const isActive = activeFoodCategorySlug === category.slug;
+
+              return (
+                <button
+                  key={category.slug}
+                  onClick={() => setActiveFoodCategorySlug(category.slug)}
+                  className="food-filter-button" // Apply the custom CSS class defined in global.css
+                  data-alt-text={buttonText} // Text for the ::before pseudo-element
+                  style={{
+                    // Override background and shadow for the active state using inline styles
+                    backgroundColor: isActive ? 'hsl(140deg 100% 44%)' : 'hsl(210deg 100% 44%)', // Green for active, Blue for inactive
+                    boxShadow: isActive ? 'hsl(140deg 87% 36%) 0px 7px 0px 0px' : 'hsl(210deg 87% 36%) 0px 7px 0px 0px', // Corresponding shadow
+                  }}
+                >
+                  {/* Render individual characters for the hover reveal effect */}
+                  {buttonText.split('').map((char, charIndex) => (
+                    <i key={charIndex} style={{ transitionDelay: `${0.045 * (charIndex + 1)}s` }}>{char}</i>
+                  ))}
+                </button>
+              );
+            })}
+          </Flex>
+
+          {/* Display ProjectCard for the selected food category */}
+          {selectedFoodCategory && (
+            <Column fillWidth gap="l">
+              <Heading as="h3" variant="heading-strong-m" className="text-neutral-700 dark:text-neutral-200 mt-4">
+                {formatSlugForDisplay(selectedFoodCategory.slug)}
               </Heading>
-              {/* ProjectCard handles the grid/layout of items for this specific food category */}
+              {/* ProjectCard itself should now align with the filter bar */}
               <ProjectCard
-                href={foodCategory.href}
-                images={foodCategory.images}
-                avatars={foodCategory.avatars}
-                link={foodCategory.link}
+                href={selectedFoodCategory.href}
+                images={selectedFoodCategory.images}
+                avatars={selectedFoodCategory.avatars}
+                link={selectedFoodCategory.link}
               />
             </Column>
-          ))}
+          )}
         </Column>
 
-        {/* Fun Experiences Section */}
+        {/* Fun Experiences Section (unchanged) */}
         <Column fillWidth gap="xl">
           <Heading as="h2" variant="heading-strong-xl" className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 dark:from-fuchsia-400 dark:to-red-500">
             {formatSlugForDisplay(funExperiencesData[0].slug)}
           </Heading>
-          <Grid columns="1" mobileColumns="1" gap="l"> {/* Grid for section content */}
+          <Grid columns="1" mobileColumns="1" gap="l">
             <ProjectCard
               href={funExperiencesData[0].href}
               images={funExperiencesData[0].images}
@@ -500,7 +545,7 @@ export default function LifeExperiences() {
 
       </Column>
 
-      {/* Footer / Call to Action Section */}
+      {/* Footer / Call to Action Section (unchanged) */}
       <Flex
         fillWidth
         horizontal="center"
@@ -515,7 +560,6 @@ export default function LifeExperiences() {
         <Text variant="body-default-m" className="text-center max-w-xl text-neutral-600 dark:text-neutral-300 px-4">
           Every experience shapes who we are. Explore more details or connect to share your own memorable moments!
         </Text>
-        {/* You can add a button here, e.g., <Button label="Get in Touch" href="/contact" /> */}
       </Flex>
     </Column>
   );

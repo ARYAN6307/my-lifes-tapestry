@@ -32,8 +32,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   link
 }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-
-  const activeImage = images[activeImageIndex];
+  const activeImage = images?.[activeImageIndex];
+  const totalImages = images?.length ?? 0;
 
   if (!activeImage) {
     return (
@@ -43,19 +43,38 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     );
   }
 
+  const goToPrevImage = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === 0 ? totalImages - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNextImage = () => {
+    setActiveImageIndex((prevIndex) =>
+      prevIndex === totalImages - 1 ? 0 : prevIndex + 1
+    );
+  };
+
   return (
     <Column fillWidth gap="l" padding="l" className="bg-white dark:bg-neutral-900 rounded-2xl shadow-md transition-all">
-      {/* Carousel component to display images */}
-      <Carousel
-        sizes="(max-width: 960px) 100vw, 960px"
-        images={images.map((image, index) => ({
-          src: image.src,
-          alt: image.title,
-          key: index,
-        }))}
-        activeImageIndex={activeImageIndex} // Pass the controlled index
-        onIndexChange={setActiveImageIndex as Dispatch<SetStateAction<number>>} // Pass the setter function
-      />
+      {/* Container for Carousel and pagination buttons */}
+      {/* IMPORTANT: Added `min-h-[200px] md:min-h-[300px]` to give the container a consistent height */}
+      <div className="relative w-full rounded-xl overflow-hidden min-h-[200px] md:min-h-[300px]">
+        <Carousel
+          sizes="(max-width: 960px) 100vw, 960px"
+          images={images.map((image, index) => ({
+            src: image.src,
+            alt: image.title,
+            key: index,
+          }))}
+          activeImageIndex={activeImageIndex}
+          onIndexChange={setActiveImageIndex as Dispatch<SetStateAction<number>>}
+          // Added `w-full h-full` to ensure Carousel attempts to fill its parent
+          className="w-full h-full"
+        />
+
+        
+      </div>
 
       {/* Dynamically display title, description, and content based on activeImage */}
       <Flex

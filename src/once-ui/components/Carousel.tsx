@@ -14,9 +14,8 @@ interface CarouselProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;
   sizes?: string;
   revealedByDefault?: boolean;
-  // Added props to make the Carousel a controlled component
-  activeImageIndex?: number; // Optional: If provided, the parent controls the active index
-  onIndexChange?: Dispatch<SetStateAction<number>>; // Optional: Callback to notify parent of index changes
+  activeImageIndex?: number;
+  onIndexChange?: Dispatch<SetStateAction<number>>;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -25,15 +24,11 @@ const Carousel: React.FC<CarouselProps> = ({
   aspectRatio = "16 / 9",
   sizes,
   revealedByDefault = false,
-  activeImageIndex: propActiveImageIndex, // Destructure with a different name
-  onIndexChange, // Destructure the callback
+  activeImageIndex: propActiveImageIndex,
+  onIndexChange,
   ...rest
 }) => {
-  // Use internal state if propActiveImageIndex is not provided (uncontrolled mode)
-  // Otherwise, use propActiveImageIndex as the source of truth (controlled mode)
   const [internalActiveIndex, setInternalActiveIndex] = useState<number>(propActiveImageIndex ?? 0);
-
-  // Determine the effective active index: controlled by prop if available, otherwise internal state
   const effectiveActiveIndex = propActiveImageIndex !== undefined ? propActiveImageIndex : internalActiveIndex;
 
   const [isTransitioning, setIsTransitioning] = useState(revealedByDefault);
@@ -50,10 +45,8 @@ const Carousel: React.FC<CarouselProps> = ({
 
   const updateActiveIndex = (newIndex: number) => {
     if (onIndexChange) {
-      // If onIndexChange is provided, let the parent control the state
       onIndexChange(newIndex);
     } else {
-      // Otherwise, update internal state (uncontrolled mode)
       setInternalActiveIndex(newIndex);
     }
   };
@@ -72,7 +65,7 @@ const Carousel: React.FC<CarouselProps> = ({
       setIsTransitioning(false);
 
       transitionTimeoutRef.current = setTimeout(() => {
-        updateActiveIndex(nextIndex); // Use the unified update function
+        updateActiveIndex(nextIndex);
 
         setTimeout(() => {
           setIsTransitioning(true);
@@ -80,6 +73,16 @@ const Carousel: React.FC<CarouselProps> = ({
         }, 300);
       }, 800);
     }
+  };
+
+  const goToPrevImage = () => {
+    const newIndex = (effectiveActiveIndex === 0) ? images.length - 1 : effectiveActiveIndex - 1;
+    updateActiveIndex(newIndex);
+  };
+
+  const goToNextImage = () => {
+    const newIndex = (effectiveActiveIndex === images.length - 1) ? 0 : effectiveActiveIndex + 1;
+    updateActiveIndex(newIndex);
   };
 
   useEffect(() => {
@@ -94,10 +97,9 @@ const Carousel: React.FC<CarouselProps> = ({
     };
   }, [revealedByDefault, initialTransition]);
 
-  // If the propActiveImageIndex changes, update the internal state
-  // This is important if the Carousel is used in a mixed controlled/uncontrolled way,
-  // or if the parent initially passes a different index.
   useEffect(() => {
+    // Only update internal state if propActiveImageIndex changes and we are in controlled mode
+    // or if internal state needs to catch up in uncontrolled mode after a prop change.
     if (propActiveImageIndex !== undefined && propActiveImageIndex !== internalActiveIndex) {
       setInternalActiveIndex(propActiveImageIndex);
     }
@@ -110,29 +112,72 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <Flex fillWidth gap="12" direction="column" {...rest}>
-      <RevealFx
-        onClick={handleImageClick}
-        fillWidth
-        trigger={isTransitioning}
-        translateY="16"
-        aspectRatio={aspectRatio}
-        speed="fast"
+      {/*
+        CRITICAL CHANGE: Ensure the relative container explicitly sets its aspect-ratio.
+        Also, ensure `h-full` and `w-full` are consistently applied to children
+        that should fill this space.
+      */}
+      <div
+        className="relative w-full overflow-hidden rounded-xl" // Added overflow-hidden and rounded-xl for consistency
+        style={{ aspectRatio: aspectRatio }} // Explicitly setting aspect ratio on the parent div
       >
-        <SmartImage
-          sizes={sizes}
-          priority
-          radius="l"
-          border="neutral-alpha-weak"
-          alt={images[effectiveActiveIndex]?.alt} // Use effectiveActiveIndex
-          aspectRatio={aspectRatio}
-          src={images[effectiveActiveIndex]?.src} // Use effectiveActiveIndex
-          style={{
-            ...(images.length > 1 && {
-              cursor: "pointer",
-            }),
-          }}
-        />
-      </RevealFx>
+        <RevealFx
+          onClick={handleImageClick}
+          fillWidth
+          trigger={isTransitioning}
+          translateY="16"
+          aspectRatio={aspectRatio} // Keep aspectRatio on RevealFx
+          speed="fast"
+          className="w-full h-full absolute inset-0" // Ensure RevealFx covers the parent completely
+        >
+          <SmartImage
+            sizes={sizes}
+            priority
+            radius="l"
+            border="neutral-alpha-weak"
+            alt={images[effectiveActiveIndex]?.alt}
+            aspectRatio={aspectRatio} // Keep aspectRatio on SmartImage
+            src={images[effectiveActiveIndex]?.src}
+            style={{
+              ...(images.length > 1 && {
+                cursor: "pointer",
+              }),
+            }}
+            className="w-full h-full object-cover" // Ensure SmartImage fills and covers its direct parent
+          />
+        </RevealFx>
+
+        {/* Pagination Buttons: These are now correctly positioned absolutely relative to the image container */}
+        {images.length > 1 && (
+          <>
+            {/* Left Pagination Button (Prev) */}
+            <button
+              onClick={goToPrevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 button"
+              aria-label="Previous image"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Prev</span>
+            </button>
+
+            {/* Right Pagination Button (Next) */}
+            <button
+              onClick={goToNextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 button"
+              aria-label="Next image"
+            >
+              <span>Next</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Existing Carousel Indicators */}
       {images.length > 1 && (
         <>
           {indicator === "line" ? (
@@ -143,7 +188,7 @@ const Carousel: React.FC<CarouselProps> = ({
                   onClick={() => handleControlClick(index)}
                   style={{
                     background:
-                      effectiveActiveIndex === index // Use effectiveActiveIndex
+                      effectiveActiveIndex === index
                         ? "var(--neutral-on-background-strong)"
                         : "var(--neutral-alpha-medium)",
                     transition: "background 0.3s ease",
@@ -161,7 +206,7 @@ const Carousel: React.FC<CarouselProps> = ({
                 <Flex
                   key={index}
                   style={{
-                    border: effectiveActiveIndex === index ? "2px solid var(--brand-solid-strong)" : "none", // Use effectiveActiveIndex
+                    border: effectiveActiveIndex === index ? "2px solid var(--brand-solid-strong)" : "none",
                     borderRadius: "var(--radius-m-nest-4)",
                     transition: "border 0.3s ease",
                   }}
