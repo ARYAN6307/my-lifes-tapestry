@@ -30,7 +30,7 @@ export default function Work() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <Projects initialCategory={""} initialPage={0} initialSearchTerm={""} />
+      <Projects />
     </Column>
   );
 }
