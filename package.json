@@ -9,15 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@floating-ui/react-dom": "^2.1.2",
+    "@material-ui/core": "^4.12.4",
     "@mdx-js/loader": "^3.1.0",
+    "@mui/material": "^7.1.0",
     "@next/mdx": "^15.3.1",
     "@once-ui-system/magic-portfolio": "file:",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.9.96",
+    "@tabler/icons-react": "^3.33.0",
+    "@tailwindcss/postcss": "^4.1.7",
     "classnames": "^2.5.1",
     "cookie": "^1.0.2",
+    "framer-motion": "^12.12.2",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^0.511.0",
     "next": "^15.3.1",
     "next-mdx-remote": "^5.0.0",
     "postcss": "^8.5.3",
@@ -30,7 +39,8 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "sass": "^1.86.3",
-    "sharp": "^0.34.1"
+    "sharp": "^0.34.1",
+    "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
     "@csstools/postcss-global-data": "^2.1.1",
